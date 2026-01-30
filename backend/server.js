@@ -1,33 +1,41 @@
+require("dotenv").config();
+
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 
-const projectRoutes = require("./routes/projects");
-const clientRoutes = require("./routes/clients");
-const contactRoutes = require("./routes/contacts");
-const subscriberRoutes = require("./routes/subscribers");
+const connectDB = require("./config/db");
+
+const projectRoutes = require("./routes/projectRoute");
+const clientRoutes = require("./routes/clientsRoute");
+const contactRoutes = require("./routes/contactRoute");
+const subscriberRoutes = require("./routes/subscriberRoute");
 
 const app = express();
 
-/* MIDDLEWARE */
+/* =======================
+   CONNECT DATABASE
+======================= */
+connectDB();
+
+/* =======================
+   MIDDLEWARE
+======================= */
 app.use(cors());
 app.use(express.json());
 
-/* ROUTES */
+/* =======================
+   ROUTES
+======================= */
 app.use("/api/projects", projectRoutes);
 app.use("/api/clients", clientRoutes);
 app.use("/api/contacts", contactRoutes);
 app.use("/api/subscribers", subscriberRoutes);
 
-/* MONGODB CONNECTION */
-mongoose
-  .connect(
-    "mongodb+srv://jahnavinalluri0123_db_user:MQ1tWO0zFVZSHI6I@cluster0.4jy3lc9.mongodb.net/flipr?retryWrites=true&w=majority"
-  )
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch(err => console.error("❌ MongoDB error:", err));
+/* =======================
+   START SERVER
+======================= */
+const PORT = process.env.PORT || 5000;
 
-/* START SERVER */
-app.listen(5000, () => {
-  console.log("🚀 Backend running at http://localhost:5000");
+app.listen(PORT, () => {
+  console.log(`🚀 Backend running at http://localhost:${PORT}`);
 });
