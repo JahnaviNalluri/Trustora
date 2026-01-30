@@ -1,12 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
-import Admin from "./Admin";
-
-const path = window.location.pathname;
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./AppRoutes";
+import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    {path === "/admin" ? <Admin /> : <App />}
-  </React.StrictMode>
+  <BrowserRouter>
+    <AppRoutes />
+  </BrowserRouter>
 );

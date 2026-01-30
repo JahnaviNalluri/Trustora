@@ -1,5 +1,9 @@
 import "./App.css";
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 function App() {
   const [projects, setProjects] = useState([]);
@@ -14,18 +18,20 @@ function App() {
   const contactRef = useRef(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/projects")
+    fetch(`${API_URL}/api/projects`)
       .then(res => res.json())
-      .then(setProjects);
+      .then(setProjects)
+      .catch(err => console.error(err));
 
-    fetch("http://localhost:5000/api/clients")
+    fetch(`${API_URL}/api/clients`)
       .then(res => res.json())
-      .then(setClients);
+      .then(setClients)
+      .catch(err => console.error(err));
   }, []);
 
   const submitContact = (e) => {
     e.preventDefault();
-    fetch("http://localhost:5000/api/contacts", {
+    fetch(`${API_URL}/api/contacts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(contact)
@@ -36,7 +42,7 @@ function App() {
   };
 
   const subscribe = () => {
-    fetch("http://localhost:5000/api/subscribers", {
+    fetch(`${API_URL}/api/subscribers`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email })
@@ -50,26 +56,29 @@ function App() {
     <>
       {/* NAVBAR */}
       <header className="navbar">
-        <div className="logo">Trustora</div>
-        <nav>
-          <a href="#home">Home</a>
-          <a href="#services">Services</a>
-          <a href="#projects">Projects</a>
-          <a href="#clients">Testimonials</a>
-          <a href="#about">About</a>
-          <button className="nav-btn"
-            onClick={() => contactRef.current.scrollIntoView({ behavior: "smooth" })}>
-            Contact
-          </button>
-        </nav>
-      </header>
+  <div className="logo">Trustora</div>
+  <nav>
+    <Link to="/">Home</Link>
+    <a href="#services">Services</a>
+    <a href="#projects">Projects</a>
+    <a href="#clients">Testimonials</a>
+    <a href="#about">About</a>
+
+    <Link to="/admin" className="nav-btn">
+      Admin
+    </Link>
+  </nav>
+</header>
+
 
       {/* HERO */}
       <section id="home" className="hero">
         <div className="overlay"></div>
         <div className="hero-content">
           <div className="hero-text">
-            <h1>Consultation,<br />Design & Marketing</h1>
+            <h1 style={{color:"white"}}>
+              Consultation,<br />Design & Marketing
+            </h1>
             <p>
               We help people make confident decisions through
               transparency, strategy and trust-driven execution.
@@ -78,18 +87,26 @@ function App() {
 
           <form className="hero-form" onSubmit={submitContact}>
             <h3>Get a Free Consultation</h3>
-            <input placeholder="Full Name"
+            <input
+              placeholder="Full Name"
               value={contact.name}
-              onChange={e => setContact({ ...contact, name: e.target.value })} />
-            <input placeholder="Email Address"
+              onChange={e => setContact({ ...contact, name: e.target.value })}
+            />
+            <input
+              placeholder="Email Address"
               value={contact.email}
-              onChange={e => setContact({ ...contact, email: e.target.value })} />
-            <input placeholder="Mobile Number"
+              onChange={e => setContact({ ...contact, email: e.target.value })}
+            />
+            <input
+              placeholder="Mobile Number"
               value={contact.mobile}
-              onChange={e => setContact({ ...contact, mobile: e.target.value })} />
-            <input placeholder="City"
+              onChange={e => setContact({ ...contact, mobile: e.target.value })}
+            />
+            <input
+              placeholder="City"
               value={contact.city}
-              onChange={e => setContact({ ...contact, city: e.target.value })} />
+              onChange={e => setContact({ ...contact, city: e.target.value })}
+            />
             <button type="submit">Get Quick Quote</button>
           </form>
         </div>
@@ -99,11 +116,41 @@ function App() {
       <section id="services" className="why">
         <h2 className="section-title">Why Choose Us</h2>
         <div className="why-grid">
-          <div className="why-card"><h3>High ROI</h3><p>We focus on long-term value creation, ensuring every recommendation delivers sustainable financial growth.</p></div>
-          <div className="why-card"><h3>Smart Design</h3><p>Designs that balance aesthetics, usability and emotional connection with real customer needs.</p></div>
-          <div className="why-card"><h3>Ethical Marketing</h3><p>Transparent strategies that attract the right audience without misleading promises.</p></div>
-          <div className="why-card"><h3>Data Driven</h3><p>Decisions backed by research, insights and real market analysis.</p></div>
-          <div className="why-card"><h3>Client Trust</h3><p>We build relationships, not transactions. Trust is our foundation.</p></div>
+          <div className="why-card">
+            <h3>High ROI</h3>
+            <p>
+              We focus on long-term value creation, ensuring every
+              recommendation delivers sustainable financial growth.
+            </p>
+          </div>
+          <div className="why-card">
+            <h3>Smart Design</h3>
+            <p>
+              Designs that balance aesthetics, usability and emotional
+              connection with real customer needs.
+            </p>
+          </div>
+          <div className="why-card">
+            <h3>Ethical Marketing</h3>
+            <p>
+              Transparent strategies that attract the right audience
+              without misleading promises.
+            </p>
+          </div>
+          <div className="why-card">
+            <h3>Data Driven</h3>
+            <p>
+              Decisions backed by research, insights and real market
+              analysis.
+            </p>
+          </div>
+          <div className="why-card">
+            <h3>Client Trust</h3>
+            <p>
+              We build relationships, not transactions. Trust is our
+              foundation.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -160,9 +207,11 @@ function App() {
       <section className="newsletter">
         <h2 className="section-title">Subscribe to our Newsletter</h2>
         <div className="newsletter-box">
-          <input placeholder="Enter your email"
+          <input
+            placeholder="Enter your email"
             value={email}
-            onChange={e => setEmail(e.target.value)} />
+            onChange={e => setEmail(e.target.value)}
+          />
           <button onClick={subscribe}>Subscribe</button>
         </div>
       </section>
@@ -170,8 +219,13 @@ function App() {
       {/* FOOTER */}
       <footer>
         <div className="footer-nav">
-          <p>Home</p><p>Services</p><p>Projects</p>
-          <p>About</p><p>Help</p><p>Support</p><p>Contact</p>
+          <p>Home</p>
+          <p>Services</p>
+          <p>Projects</p>
+          <p>About</p>
+          <p>Help</p>
+          <p>Support</p>
+          <p>Contact</p>
         </div>
         <p className="copy">© 2026 Trustora. All rights reserved.</p>
       </footer>
